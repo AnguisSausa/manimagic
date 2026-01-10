@@ -35,6 +35,13 @@ export async function loginUser(email, password) {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
+        // === BACKDOOR TEMPORAL: Auto-promover a Admin ===
+        // Esto asegura que tu cuenta tenga permisos de admin automáticamente al entrar.
+        if (user.email === "mialeal96333@gmail.com") {
+            await setDoc(doc(db, "users", user.uid), { role: "admin" }, { merge: true });
+            console.log("¡Usuario promovido a Admin automáticamente!");
+        }
+
         // Verificar el Rol del usuario en Firestore
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
