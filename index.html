@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManiMagic - Login</title>
+    <!-- Modern Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Auth Card -->
+        <div class="auth-card">
+            <h1 class="brand-title">ManiMagic</h1>
+            <p class="brand-subtitle">Gestiona tu belleza</p>
+
+            <!-- Login Form -->
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail" class="form-label">Correo Electrónico</label>
+                    <input type="email" id="loginEmail" class="form-input" placeholder="ejemplo@correo.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword" class="form-label">Contraseña</label>
+                    <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary">Entrar</button>
+
+                <p class="toggle-text">
+                    ¿No tienes cuenta?
+                    <button type="button" class="toggle-btn" onclick="toggleForms()">Regístrate</button>
+                </p>
+            </form>
+
+            <!-- Register Form (Hidden by default) -->
+            <form id="registerForm" class="hidden">
+                <div class="form-group">
+                    <label for="regName" class="form-label">Nombre Completo</label>
+                    <input type="text" id="regName" class="form-input" placeholder="Tu nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail" class="form-label">Correo Electrónico</label>
+                    <input type="email" id="regEmail" class="form-input" placeholder="ejemplo@correo.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword" class="form-label">Contraseña</label>
+                    <input type="password" id="regPassword" class="form-input" placeholder="Crea una contraseña"
+                        required>
+                </div>
+
+                <button type="submit" class="btn-primary">Crear Cuenta</button>
+
+                <p class="toggle-text">
+                    ¿Ya tienes cuenta?
+                    <button type="button" class="toggle-btn" onclick="toggleForms()">Inicia Sesión</button>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auth Logic Connection -->
+    <script type="module">
+        import { loginUser, registerUser } from "./js/auth.js";
+
+        // Toggle Logic
+        window.toggleForms = function () { // Expose to global scope for button onclick
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+
+            if (loginForm.classList.contains('hidden')) {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+            }
+        }
+
+        // Login Handler
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            loginUser(email, password);
+        });
+
+        // Register Handler
+        document.getElementById('registerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            registerUser(name, email, password);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManiMagic - Reservar Cita</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/calendar.css">
+</head>
+
+<body>
+    <div class="container" style="max-width: 800px;">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div>
+                <h1 class="brand-title" style="font-size: 2rem; text-align: left;">ManiMagic</h1>
+                <p class="brand-subtitle" style="text-align: left; margin: 0;">Tu espacio de belleza</p>
+            </div>
+            <a href="../index.html" class="btn-primary"
+                style="padding: 0.5rem 1.5rem; width: auto; text-decoration: none;">Salir</a>
+        </header>
+
+        <div class="auth-card">
+            <h2 style="font-family: var(--font-heading); margin-bottom: 1.5rem;">Reserva tu Cita</h2>
+            <p>1. Selecciona el servicio:</p>
+            <!-- Service Selection Placeholder -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                <div
+                    style="padding: 1rem; border: 2px solid var(--primary-color); background: var(--secondary-color); border-radius: 10px; text-align: center; cursor: pointer;">
+                    <h3>Diseño</h3>
+                    <p style="color: var(--accent-color); font-size: 0.8rem;">Mano alzada / 3D</p>
+                </div>
+                <div
+                    style="padding: 1rem; border: 1px solid #ccc; border-radius: 10px; text-align: center; cursor: pointer;">
+                    <h3>Retoque</h3>
+                    <p style="color: var(--accent-color); font-size: 0.8rem;">Mantenimiento</p>
+                </div>
+                <div
+                    style="padding: 1rem; border: 1px solid #ccc; border-radius: 10px; text-align: center; cursor: pointer;">
+                    <h3>Esmaltado</h3>
+                    <p style="color: var(--accent-color); font-size: 0.8rem;">Gel Semipermanente</p>
+                </div>
+                <div
+                    style="padding: 1rem; border: 1px solid #ccc; border-radius: 10px; text-align: center; cursor: pointer;">
+                    <h3>Retiro</h3>
+                    <p style="color: var(--accent-color); font-size: 0.8rem;">Retiro de material</p>
+                </div>
+            </div>
+
+            <p>2. Selecciona una fecha:</p>
+            <div class="calendar-container" style="border: 1px solid #eee; box-shadow: none; padding: 1rem;">
+                <div class="calendar-header">
+                    <button class="calendar-nav-btn">&lt;</button>
+                    <h2 class="calendar-title" style="font-size: 1.2rem;">Enero 2026</h2>
+                    <button class="calendar-nav-btn">&gt;</button>
+                </div>
+                <!-- Mini Calendar Grid -->
+                <div class="calendar-grid">
+                    <div class="calendar-day-name">D</div>
+                    <div class="calendar-day-name">L</div>
+                    <div class="calendar-day-name">M</div>
+                    <div class="calendar-day-name">M</div>
+                    <div class="calendar-day-name">J</div>
+                    <div class="calendar-day-name">V</div>
+                    <div class="calendar-day-name">S</div>
+
+                    <div class="calendar-date empty"></div>
+                    <div class="calendar-date empty"></div>
+                    <div class="calendar-date empty"></div>
+                    <div class="calendar-date">1</div>
+                    <div class="calendar-date">2</div>
+                    <div class="calendar-date">3</div>
+                    <div class="calendar-date">4</div>
+
+                    <div class="calendar-date">5</div>
+                    <div class="calendar-date">6</div>
+                    <div class="calendar-date">7</div>
+                    <div class="calendar-date">8</div>
+                    <div class="calendar-date">9</div>
+                    <div class="calendar-date today active">10</div>
+                    <div class="calendar-date">11</div>
+                    <!-- Truncated for visual brevity in code, user gets idea -->
+                </div>
+            </div>
+
+            <br>
+            <button class="btn-primary" style="margin-top: 1rem;">Confirmar Cita</button>
+        </div>
+    </div>
+</body>
+
+</html>

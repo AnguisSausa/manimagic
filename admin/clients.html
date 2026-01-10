@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManiMagic - Clientes</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            height: 100vh;
+        }
+
+        .sidebar {
+            background: var(--glass-bg);
+            border-right: var(--glass-border);
+            padding: 2rem;
+        }
+
+        .content {
+            padding: 3rem;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background-color: var(--secondary-color);
+            color: var(--dark-bg);
+            font-weight: 600;
+        }
+
+        .client-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .client-info h3 {
+            margin-bottom: 0.2rem;
+            color: var(--dark-bg);
+        }
+
+        .client-info p {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .badge {
+            background: var(--secondary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-grid">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2 class="brand-title" style="font-size: 1.5rem; text-align: left; margin-bottom: 2rem;">ManiMagic Admin
+            </h2>
+            <nav>
+                <a href="dashboard.html" class="nav-item">📅 Calendario</a>
+                <a href="inventory.html" class="nav-item">💅 Inventario</a>
+                <a href="clients.html" class="nav-item active">👥 Clientes</a>
+                <a href="../index.html" class="nav-item" style="margin-top: auto; color: var(--accent-color);">Cerrar
+                    Sesión</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="page-header" style="margin-bottom: 2rem;">
+                <div>
+                    <h1 style="font-family: var(--font-heading);">Registro de Clientes</h1>
+                    <p style="color: #666;">Historial de todas las personas que han agendado.</p>
+                </div>
+            </div>
+
+            <!-- Client List -->
+            <div class="client-list">
+                <!-- Static Placeholder Data -->
+                <div class="client-card">
+                    <div class="client-info">
+                        <h3>María González</h3>
+                        <p>maria.gonzalez@email.com | +52 55 1234 5678</p>
+                    </div>
+                    <div class="client-stats">
+                        <span class="badge">5 Citas Totales</span>
+                    </div>
+                </div>
+
+                <div class="client-card">
+                    <div class="client-info">
+                        <h3>Ana Pérez</h3>
+                        <p>ana.perez@email.com | +52 55 9876 5432</p>
+                    </div>
+                    <div class="client-stats">
+                        <span class="badge">1 Cita Total</span>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManiMagic - Inventario</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            height: 100vh;
+        }
+
+        .sidebar {
+            background: var(--glass-bg);
+            border-right: var(--glass-border);
+            padding: 2rem;
+        }
+
+        .content {
+            padding: 3rem;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background-color: var(--secondary-color);
+            color: var(--dark-bg);
+            font-weight: 600;
+        }
+
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .data-table th {
+            background-color: var(--secondary-color);
+            font-weight: 600;
+            color: var(--dark-bg);
+        }
+
+        .action-btn {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        .btn-edit {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: #B5838D;
+            color: white;
+        }
+
+        /* Header Actions */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-grid">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2 class="brand-title" style="font-size: 1.5rem; text-align: left; margin-bottom: 2rem;">ManiMagic Admin
+            </h2>
+            <nav>
+                <a href="dashboard.html" class="nav-item">📅 Calendario</a>
+                <a href="inventory.html" class="nav-item active">💅 Inventario</a>
+                <a href="clients.html" class="nav-item">👥 Clientes</a>
+                <a href="../index.html" class="nav-item" style="margin-top: auto; color: var(--accent-color);">Cerrar
+                    Sesión</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="page-header">
+                <div>
+                    <h1 style="font-family: var(--font-heading);">Gestión de Inventario</h1>
+                    <p style="color: #666;">Administra tus productos y servicios.</p>
+                </div>
+                <button class="btn-primary" style="width: auto;">+ Nuevo Producto</button>
+            </div>
+
+            <input type="text" class="search-bar" placeholder="🔍 Buscar producto...">
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Producto / Servicio</th>
+                        <th>Categoría</th>
+                        <th>Stock / Disponibilidad</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Placeholder Rows -->
+                    <tr>
+                        <td>Esmalte Gel Rojo Pasión</td>
+                        <td>Insumo</td>
+                        <td>12 unidades</td>
+                        <td>$0.00</td>
+                        <td>
+                            <button class="action-btn btn-edit">Editar</button>
+                            <button class="action-btn btn-delete">Borrar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Servicio Manicure Express</td>
+                        <td>Servicio</td>
+                        <td>--</td>
+                        <td>$25.00</td>
+                        <td>
+                            <button class="action-btn btn-edit">Editar</button>
+                            <button class="action-btn btn-delete">Borrar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+</body>
+
+</html>

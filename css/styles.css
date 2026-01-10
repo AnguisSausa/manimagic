@@ -1,0 +1,137 @@
+/* ManiMagic Premium Design System */
+:root {
+    /* Color Palette: Soft Glam & Elegant */
+    --primary-color: #D4A373; /* Gold/Bronze Sand */
+    --secondary-color: #FAEDCD; /* Soft Cream */
+    --accent-color: #B5838D; /* English Rose */
+    --dark-bg: #2C2C2C; /* Deep Charcoal */
+    --light-bg: #FEFAE0; /* Off-white */
+    --text-main: #333333;
+    --text-white: #FFFFFF;
+    
+    /* Typography */
+    --font-main: 'Inter', sans-serif;
+    --font-heading: 'Playfair Display', serif; /* Elegant for headers */
+
+    /* Effects */
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.2);
+    --shadow-soft: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--light-bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: radial-gradient(circle at top right, var(--secondary-color), var(--light-bg));
+}
+
+.container {
+    width: 100%;
+    max-width: 480px;
+    padding: 2rem;
+}
+
+/* Glassmorphism Card */
+.auth-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: var(--glass-border);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: var(--shadow-soft);
+}
+
+.brand-title {
+    font-family: var(--font-heading);
+    color: var(--dark-bg);
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.brand-subtitle {
+    text-align: center;
+    color: var(--accent-color);
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.form-input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid transparent;
+    background-color: #f5f5f5;
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    border-color: var(--accent-color);
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(181, 131, 141, 0.1);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--dark-bg);
+    color: var(--text-white);
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    background-color: #000;
+}
+
+.toggle-text {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.toggle-btn {
+    color: var(--accent-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Utilities */
+.hidden {
+    display: none;
+}
