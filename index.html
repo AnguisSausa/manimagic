@@ -64,12 +64,9 @@
         </div>
     </div>
 
-    <!-- Auth Logic Connection -->
-    <script type="module">
-        import { loginUser, registerUser } from "./js/auth.js";
-
-        // Toggle Logic
-        window.toggleForms = function () { // Expose to global scope for button onclick
+    <!-- UI Logic (Works without server) -->
+    <script>
+        function toggleForms() {
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
 
@@ -81,6 +78,11 @@
                 registerForm.classList.remove('hidden');
             }
         }
+    </script>
+
+    <!-- Auth Logic Connection (Requires Server/Modules) -->
+    <script type="module">
+        import { loginUser, registerUser } from "./js/auth.js";
 
         // Login Handler
         document.getElementById('loginForm').addEventListener('submit', (e) => {
