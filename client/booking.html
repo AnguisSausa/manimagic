@@ -107,8 +107,17 @@
                 </div>
             </div>
 
+            <div id="timeSlotsSection" class="hidden" style="margin-top: 2rem;">
+                <p>3. Selecciona una hora:</p>
+                <div id="timeSlotsGrid"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;">
+                    <!-- Slots will go here -->
+                </div>
+            </div>
+
             <br>
-            <button class="btn-primary" style="margin-top: 1rem;">Confirmar Cita</button>
+            <button id="confirmAppointmentBtn" class="btn-primary" style="margin-top: 1rem;" disabled>Confirmar
+                Cita</button>
         </div>
     </div>
     <script type="module" src="../js/auth.js"></script>
@@ -120,10 +129,10 @@
         });
     </script>
     <script>
-        let selectedService = null;
+        window.selectedService = null; // Expose globally
 
         function selectService(serviceName, requiresPhoto) {
-            selectedService = serviceName;
+            window.selectedService = serviceName;
 
             // Visual Highlight
             const cards = document.querySelectorAll('.service-card');
