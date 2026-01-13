@@ -43,25 +43,34 @@ async function loadAppointments() {
         appts.forEach(appt => {
             const tr = document.createElement('tr');
             tr.style.borderBottom = '1px solid #eee';
+
+            // Photo Button Logic
+            // Photo Button Logic
+            let photoHtml = '';
+            if (appt.photoBase64) {
+                photoHtml = `<button class="view-photo-btn" data-photo="${appt.id}" style="border:none; background:none; cursor:pointer; padding:0;">
+                    <img src="${appt.photoBase64}" style="width:35px; height:35px; object-fit:cover; border-radius:4px; border:1px solid #ccc;">
+               </button>`;
+            }
+
             tr.innerHTML = `
-                <td style="padding: 1rem;">
+                <td style="padding: 0.5rem;">
                     <div style="font-weight:bold;">${appt.date}</div>
-                    <div style="color:var(--accent-color);">${appt.time}</div>
+                    <div style="color:var(--accent-color); font-size:0.8rem;">${appt.time}</div>
                 </td>
-                <td style="padding: 1rem;">${appt.userName || 'Usuario'}</td>
-                <td style="padding: 1rem;">
-                    <span style="background:var(--secondary-color); padding:0.2rem 0.5rem; border-radius:5px;">${appt.service}</span>
-                    ${appt.allergies ? `<div style="font-size:0.8rem; color:red; margin-top:0.2rem;">⚠️ ${appt.allergies}</div>` : ''}
+                <td style="padding: 0.5rem;">
+                    <div>${appt.userName || 'Usuario'}</div>
+                    <div style="font-size:0.8rem; color:#666;">${appt.service}</div>
+                    ${appt.allergies ? `<div style="font-size:0.7rem; color:red;">⚠️ ${appt.allergies}</div>` : ''}
                 </td>
-                <td style="padding: 1rem;">
-                    <a href="https://wa.me/${appt.phone.replace(/[^0-9]/g, '')}" target="_blank" style="text-decoration:none; color:var(--primary-color);">
-                        📱 ${appt.phone}
-                    </a>
-                </td>
-                <td style="padding: 1rem;">
-                    <button class="btn-complete" data-id="${appt.id}" style="
-                        background: #4CAF50; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;
-                    ">✅ Completar</button>
+                <td style="padding: 0.5rem;">
+                    <div style="display:flex; gap:0.5rem; align-items:center;">
+                        ${photoHtml}
+                        <a href="https://wa.me/${appt.phone.replace(/[^0-9]/g, '')}" target="_blank" title="WhatsApp" style="text-decoration:none; font-size:1.2rem;">📱</a>
+                        <button class="btn-complete" data-id="${appt.id}" title="Completar" style="
+                            background: none; border: none; cursor: pointer; font-size:1.2rem;
+                        ">✅</button>
+                    </div>
                 </td>
             `;
             tableBody.appendChild(tr);
@@ -71,6 +80,18 @@ async function loadAppointments() {
         document.querySelectorAll('.btn-complete').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 openCompleteModal(btn.dataset.id);
+            });
+        });
+
+        // Add Listeners for Photos
+        document.querySelectorAll('.view-photo-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const apptId = btn.dataset.photo;
+                const appt = appts.find(a => a.id === apptId);
+                if (appt && appt.photoBase64) {
+                    const w = window.open("");
+                    w.document.write(`<img src="${appt.photoBase64}" style="max-width:100%">`);
+                }
             });
         });
 

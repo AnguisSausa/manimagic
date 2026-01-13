@@ -16,17 +16,90 @@
             display: grid;
             grid-template-columns: 250px 1fr;
             height: 100vh;
+            overflow: hidden;
+            /* Prevent body scroll */
         }
 
         .sidebar {
             background: var(--glass-bg);
             border-right: var(--glass-border);
             padding: 2rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .content {
-            padding: 3rem;
+            padding: 1.5rem;
+            /* Reduced padding */
+            height: 100%;
             overflow-y: auto;
+            /* Scroll only if necessary inside content */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Inner Dashboard Grid */
+        .dashboard-content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            /* 2 Columns */
+            grid-template-rows: auto 1fr;
+            gap: 1.5rem;
+            flex: 1;
+            min-height: 0;
+            /* Important for scroll */
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard-content-grid {
+                grid-template-columns: 1fr;
+                /* Stack on smaller screens */
+                grid-template-rows: auto;
+            }
+        }
+
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            overflow-y: auto;
+            /* Allow left column to scroll if needed */
+            padding-right: 0.5rem;
+        }
+
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Adjust Cards for Grid */
+        .auth-card {
+            width: 100% !important;
+            max-width: none !important;
+            margin-bottom: 0 !important;
+            padding: 1.5rem !important;
+            /* Compact padding */
+        }
+
+        .calendar-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .calendar-grid {
+            flex: 1;
+            /* Adjust grid rows to fit better */
+            grid-template-rows: repeat(auto-fill, minmax(40px, 1fr));
+        }
+
+        h2.card-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-family: var(--font-heading);
         }
 
         .nav-item {
@@ -54,73 +127,98 @@
         <aside class="sidebar">
             <h2 class="brand-title" style="font-size: 1.5rem; text-align: left; margin-bottom: 2rem;">ManiMagic Admin
             </h2>
-            <nav>
+            <nav style="flex: 1;">
                 <a href="dashboard.html" class="nav-item active">📅 Calendario</a>
                 <a href="inventory.html" class="nav-item">💅 Inventario</a>
                 <a href="clients.html" class="nav-item">👥 Clientes</a>
-                <a href="../index.html" class="nav-item" style="margin-top: auto; color: var(--accent-color);">Cerrar
-                    Sesión</a>
             </nav>
+            <a href="../index.html" class="nav-item" style="margin-top: auto; color: var(--accent-color);">Cerrar
+                Sesión</a>
         </aside>
 
         <!-- Main Content -->
         <main class="content">
-            <h1 style="font-family: var(--font-heading); margin-bottom: 1rem;">Panel de Control</h1>
-            <div class="auth-card" style="width: 100%; max-width: 1000px; margin-bottom: 2rem;">
-                <h2 style="font-family: var(--font-heading); margin-bottom: 1rem;">⚙️ Configuración de Disponibilidad
-                </h2>
-                <form id="availabilityForm">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-                        <!-- Working Days -->
-                        <div>
-                            <p class="form-label">Días Laborales:</p>
-                            <label><input type="checkbox" name="days" value="1" checked> Lunes</label><br>
-                            <label><input type="checkbox" name="days" value="2" checked> Martes</label><br>
-                            <label><input type="checkbox" name="days" value="3" checked> Miércoles</label><br>
-                            <label><input type="checkbox" name="days" value="4" checked> Jueves</label><br>
-                            <label><input type="checkbox" name="days" value="5" checked> Viernes</label><br>
-                            <label><input type="checkbox" name="days" value="6" checked> Sábado</label><br>
-                            <label><input type="checkbox" name="days" value="0"> Domingo</label>
-                        </div>
+            <h1 style="font-family: var(--font-heading); margin-bottom: 1rem; font-size: 1.5rem;">Panel de Control</h1>
 
-                        <!-- Hours -->
-                        <div>
-                            <div class="form-group">
-                                <label class="form-label">Hora de Inicio:</label>
-                                <input type="time" id="startTime" class="form-input" value="09:00">
+            <div class="dashboard-content-grid">
+                <!-- Left Column: Availability & Appointments -->
+                <div class="left-column">
+                    <!-- Availability -->
+                    <div class="auth-card">
+                        <h2 class="card-title">⚙️ Disponibilidad</h2>
+                        <form id="availabilityForm">
+                            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                <!-- Days -->
+                                <div style="flex: 1; min-width: 120px;">
+                                    <p class="form-label">Días:</p>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; font-size: 0.9rem;">
+                                        <label><input type="checkbox" name="days" value="1" checked> Lun</label>
+                                        <label><input type="checkbox" name="days" value="2" checked> Mar</label>
+                                        <label><input type="checkbox" name="days" value="3" checked> Mié</label>
+                                        <label><input type="checkbox" name="days" value="4" checked> Jue</label>
+                                        <label><input type="checkbox" name="days" value="5" checked> Vie</label>
+                                        <label><input type="checkbox" name="days" value="6" checked> Sáb</label>
+                                        <label><input type="checkbox" name="days" value="0"> Dom</label>
+                                    </div>
+                                </div>
+                                <!-- Hours -->
+                                <div style="flex: 1; min-width: 120px;">
+                                    <div class="form-group" style="margin-bottom: 0.5rem;">
+                                        <label class="form-label">Inicio:</label>
+                                        <input type="time" id="startTime" class="form-input" value="09:00"
+                                            style="padding: 0.5rem;">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 0.5rem;">
+                                        <label class="form-label">Fin:</label>
+                                        <input type="time" id="endTime" class="form-input" value="18:00"
+                                            style="padding: 0.5rem;">
+                                    </div>
+                                    <button type="submit" class="btn-primary"
+                                        style="padding: 0.5rem; font-size: 0.9rem; margin-top: 0.5rem;">Guardar</button>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Hora de Fin:</label>
-                                <input type="time" id="endTime" class="form-input" value="18:00">
+                        </form>
+                    </div>
+
+                    <!-- Pending Appointments -->
+                    <div class="auth-card" style="flex: 1; overflow: hidden; display: flex; flex-direction: column;">
+                        <h2 class="card-title">📅 Citas Pendientes</h2>
+                        <div style="overflow-y: auto; flex: 1;">
+                            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                                <thead>
+                                    <tr
+                                        style="background: var(--secondary-color); text-align: left; position: sticky; top: 0;">
+                                        <th style="padding: 0.5rem;">Fecha</th>
+                                        <th style="padding: 0.5rem;">Cliente</th>
+                                        <th style="padding: 0.5rem;">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="appointmentsTableBody">
+                                    <tr>
+                                        <td colspan="3" style="padding:1rem; text-align:center;">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Calendar -->
+                <div class="right-column">
+                    <div class="auth-card" style="height: 100%; display: flex; flex-direction: column;">
+                        <!-- Calendar Component -->
+                        <div class="calendar-container">
+                            <div class="calendar-header">
+                                <button class="calendar-nav-btn" id="prevMonth">&lt;</button>
+                                <h2 class="calendar-title" id="currentMonthLabel">Cargando...</h2>
+                                <button class="calendar-nav-btn" id="nextMonth">&gt;</button>
+                            </div>
+
+                            <div class="calendar-grid" id="calendarGrid">
+                                <!-- JS will inject days here -->
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn-primary" style="margin-top: 1rem; width: auto;">Guardar
-                        Horarios</button>
-                </form>
-            </div>
-
-            <!-- Pending Appointments Section -->
-            <div class="auth-card" style="width: 100%; max-width: 1000px; margin-bottom: 2rem;">
-                <h2 style="font-family: var(--font-heading); margin-bottom: 1rem;">📅 Citas Programadas</h2>
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="background: var(--secondary-color); text-align: left;">
-                                <th style="padding: 1rem;">Fecha/Hora</th>
-                                <th style="padding: 1rem;">Cliente</th>
-                                <th style="padding: 1rem;">Servicio</th>
-                                <th style="padding: 1rem;">Contacto</th>
-                                <th style="padding: 1rem;">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="appointmentsTableBody">
-                            <!-- JS will inject rows here -->
-                            <tr>
-                                <td colspan="5" style="padding:1rem; text-align:center;">Cargando citas...</td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
 
@@ -139,21 +237,6 @@
                     </div>
 
                     <button id="confirmCompleteBtn" class="btn-primary">Guardar y Finalizar</button>
-                </div>
-            </div>
-
-            <div class="auth-card" style="width: 100%; max-width: 1000px;">
-                <!-- Calendar Component -->
-                <div class="calendar-container">
-                    <div class="calendar-header">
-                        <button class="calendar-nav-btn" id="prevMonth">&lt;</button>
-                        <h2 class="calendar-title" id="currentMonthLabel">Cargando...</h2>
-                        <button class="calendar-nav-btn" id="nextMonth">&gt;</button>
-                    </div>
-
-                    <div class="calendar-grid" id="calendarGrid">
-                        <!-- JS will inject days here -->
-                    </div>
                 </div>
             </div>
 
