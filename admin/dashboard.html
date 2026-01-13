@@ -100,6 +100,48 @@
                 </form>
             </div>
 
+            <!-- Pending Appointments Section -->
+            <div class="auth-card" style="width: 100%; max-width: 1000px; margin-bottom: 2rem;">
+                <h2 style="font-family: var(--font-heading); margin-bottom: 1rem;">📅 Citas Programadas</h2>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: var(--secondary-color); text-align: left;">
+                                <th style="padding: 1rem;">Fecha/Hora</th>
+                                <th style="padding: 1rem;">Cliente</th>
+                                <th style="padding: 1rem;">Servicio</th>
+                                <th style="padding: 1rem;">Contacto</th>
+                                <th style="padding: 1rem;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointmentsTableBody">
+                            <!-- JS will inject rows here -->
+                            <tr>
+                                <td colspan="5" style="padding:1rem; text-align:center;">Cargando citas...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modal for Completing Appointment (Price) -->
+            <div id="completeModal"
+                style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1100;">
+                <div class="auth-card" style="width:90%; max-width:400px; position:relative;">
+                    <button id="closeCompleteModal"
+                        style="position:absolute; top:1rem; right:1rem; border:none; background:none; font-size:1.2rem; cursor:pointer;">&times;</button>
+                    <h2 style="margin-bottom:1rem;">Finalizar Cita</h2>
+                    <p style="margin-bottom:1rem;">Ingresa el monto cobrado por este servicio:</p>
+
+                    <div class="form-group">
+                        <label class="form-label">Precio ($):</label>
+                        <input type="number" id="servicePrice" class="form-input" placeholder="0.00" min="0">
+                    </div>
+
+                    <button id="confirmCompleteBtn" class="btn-primary">Guardar y Finalizar</button>
+                </div>
+            </div>
+
             <div class="auth-card" style="width: 100%; max-width: 1000px;">
                 <!-- Calendar Component -->
                 <div class="calendar-container">
@@ -153,10 +195,12 @@
     <script type="module">
         import { saveAvailabilitySettings, loadAvailabilitySettings } from '../js/availability.js';
         import { initCalendar } from '../js/calendar-admin.js';
+        import { initAppointmentsAdmin } from '../js/appointments-admin.js';
 
         // Cargar configuración al iniciar
         window.addEventListener('DOMContentLoaded', async () => {
             initCalendar(); // Init dynamic calendar
+            initAppointmentsAdmin(); // Load Appointments Table
 
             const settings = await loadAvailabilitySettings();
             if (settings) {
