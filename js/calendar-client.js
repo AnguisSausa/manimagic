@@ -326,6 +326,13 @@ async function saveAppointment() {
         return;
     }
 
+    // Validate Allergies (Mandatory)
+    if (!allergies || allergies.trim() === "") {
+        if (window.showToast) showToast("Por favor indica alergias o escribe 'Ninguna'.", "error");
+        else alert("Por favor indica alergias o escribe 'Ninguna'.");
+        return;
+    }
+
     let photoBase64 = null;
     if (photoInput.files.length > 0) {
         try {
