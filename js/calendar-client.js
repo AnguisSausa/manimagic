@@ -30,7 +30,7 @@ export async function initClientCalendar() {
             loadPendingAppointments(user.uid);
         } else {
             const widget = document.getElementById('pending-appointments-widget');
-            if(widget) widget.classList.add('hidden');
+            if (widget) widget.classList.add('hidden');
         }
     });
 }
@@ -42,17 +42,17 @@ async function loadPendingAppointments(uid) {
 
     try {
         const q = query(
-            collection(db, "appointments"), 
+            collection(db, "appointments"),
             where("userId", "==", uid),
-            where("status", "==", "pending") 
+            where("status", "==", "pending")
         );
-        
+
         const querySnapshot = await getDocs(q);
         const appointments = [];
         querySnapshot.forEach((doc) => {
             appointments.push({ id: doc.id, ...doc.data() });
         });
-        
+
         // Sort by date ascending
         appointments.sort((a, b) => {
             const dateA = new Date(a.date + 'T' + a.time);
@@ -63,11 +63,11 @@ async function loadPendingAppointments(uid) {
         if (appointments.length > 0) {
             widget.classList.remove('hidden');
             listContainer.innerHTML = '';
-            
+
             appointments.forEach(appt => {
                 const item = document.createElement('div');
                 item.className = 'pending-item';
-                
+
                 // Format date nicely
                 const dateObj = new Date(appt.date + 'T12:00:00'); // Midday to avoid timezone shifts
                 const dateStr = dateObj.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
@@ -79,44 +79,46 @@ async function loadPendingAppointments(uid) {
                     </div>
                     <div class="pending-service">${appt.service}</div>
                 `;
-                
+
                 const cancelBtn = document.createElement('button');
                 cancelBtn.className = 'pending-cancel-btn';
                 cancelBtn.textContent = 'Cancelar';
                 cancelBtn.onclick = () => cancelAppointment(appt.id);
-                
+
                 item.appendChild(cancelBtn);
                 listContainer.appendChild(item);
             });
         } else {
-             widget.classList.add('hidden');
+            // Show empty state instead of hiding
+            widget.classList.remove('hidden');
+            listContainer.innerHTML = '<p class="no-appointments" style="text-align:center; color:#666; font-size:0.9rem;">No tienes citas pendientes.</p>';
         }
-    } catch(e) {
+    } catch (e) {
         console.error("Error loading pending appointments:", e);
     }
 }
 
 async function cancelAppointment(apptId) {
-    if(!confirm("¿Seguro que deseas cancelar esta cita?")) return;
-    
+    if (!confirm("¿Seguro que deseas cancelar esta cita?")) return;
+
     try {
-        await updateDoc(doc(db, "appointments", apptId), { 
+        await updateDoc(doc(db, "appointments", apptId), {
             status: 'canceled',
             canceledAt: new Date().toISOString()
         });
-        
+
         showToast("Cita cancelada", "success");
-        
+
         // Refresh
         const user = auth.currentUser;
-        if(user) loadPendingAppointments(user.uid);
-        
+        if (user) loadPendingAppointments(user.uid);
+
         // Refresh slots if on same day
         if (selectedDate) generateTimeSlots(selectedDate);
-        
-    } catch(e) {
+
+    } catch (e) {
         console.error("Error canceling:", e);
-        if(window.showToast) window.showToast("Error al cancelar", "error");
+        if (window.showToast) window.showToast("Error al cancelar", "error");
         else alert("Error al cancelar");
     }
 }
