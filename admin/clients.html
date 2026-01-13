@@ -85,7 +85,8 @@
                 <a href="dashboard.html" class="nav-item">📅 Calendario</a>
                 <a href="inventory.html" class="nav-item">💅 Inventario</a>
                 <a href="clients.html" class="nav-item active">👥 Clientes</a>
-                <a href="../index.html" class="nav-item" style="margin-top: auto; color: var(--accent-color);">Cerrar
+                <a href="#" id="logout-btn" class="nav-item"
+                    style="margin-top: 2rem; color: var(--accent-color);">Cerrar
                     Sesión</a>
             </nav>
         </aside>
@@ -99,32 +100,18 @@
                 </div>
             </div>
 
-            <!-- Client List -->
-            <div class="client-list">
-                <!-- Static Placeholder Data -->
-                <div class="client-card">
-                    <div class="client-info">
-                        <h3>María González</h3>
-                        <p>maria.gonzalez@email.com | +52 55 1234 5678</p>
-                    </div>
-                    <div class="client-stats">
-                        <span class="badge">5 Citas Totales</span>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <div class="client-info">
-                        <h3>Ana Pérez</h3>
-                        <p>ana.perez@email.com | +52 55 9876 5432</p>
-                    </div>
-                    <div class="client-stats">
-                        <span class="badge">1 Cita Total</span>
-                    </div>
+            <!-- Client List Container (Populated by js/clients.js) -->
+            <div class="client-list" id="client-list">
+                <div style="text-align: center; padding: 2rem;">
+                    <p>Cargando clientes...</p>
                 </div>
             </div>
 
         </main>
     </div>
+
+    <!-- Firebase & Custom Scripts -->
+    <script type="module" src="../js/clients.js"></script>
 </body>
 
 </html>
