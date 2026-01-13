@@ -25,6 +25,7 @@ const searchInput = document.getElementById("search-input");
 const productCategory = document.getElementById("product-category");
 const stockContainer = document.getElementById("stock-container");
 const logoutBtn = document.getElementById("logout-btn");
+const stockAlertContainer = document.getElementById("stock-alert-container");
 
 // Cerrar Sesión
 logoutBtn.addEventListener("click", (e) => {
@@ -73,9 +74,25 @@ async function fetchProducts() {
         querySnapshot.forEach((doc) => {
             allProducts.push({ id: doc.id, ...doc.data() });
         });
+        checkLowStock(allProducts);
         renderTable(allProducts);
     } catch (error) {
         console.error("Error al cargar productos:", error);
+    }
+}
+
+// Verificar stock bajo
+function checkLowStock(products) {
+    const lowStockItems = products.filter(p => p.category !== 'Servicio' && p.stock < 3);
+
+    if (lowStockItems.length > 0) {
+        stockAlertContainer.innerHTML = `
+            <div class="stock-alert-banner">
+                <span>⚠️ <b>Aviso de Stock Bajo:</b> Tienes ${lowStockItems.length} productos con menos de 3 unidades.</span>
+            </div>
+        `;
+    } else {
+        stockAlertContainer.innerHTML = "";
     }
 }
 
@@ -84,10 +101,22 @@ function renderTable(products) {
     inventoryTableBody.innerHTML = "";
     products.forEach((product) => {
         const tr = document.createElement("tr");
+        const isLowStock = product.category !== 'Servicio' && product.stock < 3;
+
+        if (isLowStock) {
+            tr.classList.add("row-low-stock");
+        }
+
         tr.innerHTML = `
             <td>${product.name}</td>
             <td>${product.category}</td>
-            <td>${product.category === 'Servicio' ? '--' : (product.stock + ' unidades')}</td>
+            <td>
+                ${product.category === 'Servicio' ? '--' : `
+                    <span class="stock-badge ${isLowStock ? 'low' : 'ok'}">
+                        ${product.stock} unidades
+                    </span>
+                `}
+            </td>
             <td>$${parseFloat(product.price).toFixed(2)}</td>
             <td>
                 <button class="action-btn btn-edit" data-id="${product.id}">Editar</button>

@@ -376,3 +376,42 @@ body.admin-body {
         visibility: hidden;
     }
 }
+
+/* Low Stock Alert Styles */
+.row-low-stock {
+    background-color: rgba(231, 76, 60, 0.1) !important;
+}
+
+.stock-badge {
+    padding: 0.2rem 0.6rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.stock-badge.low {
+    background-color: #ff4757;
+    color: white;
+}
+
+.stock-badge.ok {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.stock-alert-banner {
+    background-color: #ffdce0;
+    color: #af233a;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border: 1px solid #ffccd1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.stock-alert-banner b {
+    color: #e74c3c;
+}
