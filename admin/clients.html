@@ -82,12 +82,14 @@
             <h2 class="brand-title" style="font-size: 1.5rem; text-align: left; margin-bottom: 2rem;">ManiMagic Admin
             </h2>
             <nav>
-                <a href="dashboard.html" class="nav-item">📅 Calendario</a>
-                <a href="inventory.html" class="nav-item">💅 Inventario</a>
-                <a href="clients.html" class="nav-item active">👥 Clientes</a>
+                <a href="dashboard.html" class="nav-item"><span>📅 Calendario</span></a>
+                <a href="inventory.html" class="nav-item"><span>💅 Inventario</span></a>
+                <a href="clients.html" class="nav-item active">
+                    <span>👥 Clientes</span>
+                    <span id="client-count-badge" class="nav-badge" style="display: none;">0</span>
+                </a>
                 <a href="#" id="logout-btn" class="nav-item"
-                    style="margin-top: 2rem; color: var(--accent-color);">Cerrar
-                    Sesión</a>
+                    style="margin-top: 2rem; color: var(--accent-color);"><span>Cerrar Sesión</span></a>
             </nav>
         </aside>
 
@@ -112,6 +114,7 @@
 
     <!-- Firebase & Custom Scripts -->
     <script type="module" src="../js/clients.js"></script>
+    <script type="module" src="../js/admin-utils.js"></script>
 </body>
 
 </html>

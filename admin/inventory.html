@@ -110,12 +110,14 @@
             <h2 class="brand-title" style="font-size: 1.5rem; text-align: left; margin-bottom: 2rem;">ManiMagic Admin
             </h2>
             <nav>
-                <a href="dashboard.html" class="nav-item">📅 Calendario</a>
-                <a href="inventory.html" class="nav-item active">💅 Inventario</a>
-                <a href="clients.html" class="nav-item">👥 Clientes</a>
+                <a href="dashboard.html" class="nav-item"><span>📅 Calendario</span></a>
+                <a href="inventory.html" class="nav-item active"><span>💅 Inventario</span></a>
+                <a href="clients.html" class="nav-item">
+                    <span>👥 Clientes</span>
+                    <span id="client-count-badge" class="nav-badge" style="display: none;">0</span>
+                </a>
                 <a href="#" id="logout-btn" class="nav-item"
-                    style="margin-top: auto; color: var(--accent-color);">Cerrar
-                    Sesión</a>
+                    style="margin-top: auto; color: var(--accent-color);"><span>Cerrar Sesión</span></a>
             </nav>
         </aside>
 
@@ -191,6 +193,7 @@
     </div>
 
     <script type="module" src="../js/inventory.js"></script>
+    <script type="module" src="../js/admin-utils.js"></script>
 </body>
 
 </html>

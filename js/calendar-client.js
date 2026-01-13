@@ -233,15 +233,16 @@ async function generateTimeSlots(dateStr) {
         bookedTimes.push(doc.data().time); // Assuming stored as "09:00"
     });
 
-    // 2. Generate Slots (Hourly)
+    // 2. Generate Slots (Every 2 Hours)
     const slots = [];
     let current = parseInt(start.split(':')[0]);
     const endHour = parseInt(end.split(':')[0]);
 
-    // Simple hourly loop
-    for (let h = current; h < endHour; h++) {
+    // Loop with 2-hour step
+    for (let h = current; h < endHour; h += 2) {
         const timeLabel = `${String(h).padStart(2, '0')}:00`;
 
+        // Ideally, check for overlap if needed, but for fixed slots:
         if (!bookedTimes.includes(timeLabel)) {
             slots.push(timeLabel);
         }
@@ -282,16 +283,10 @@ async function saveAppointment() {
     if (!selectedDate || !selectedTime) return;
 
     // Get Form Data
-    // Note: 'selectedService' is global in booking.html (script tag), 
-    // we might need to access it differently or move that state here.
-    // For now assuming we can access DOM elements.
-
-    // Hack: Read from global scope variable defined in HTML script
-    // ideally we should export selectService logic too.
     const serviceName = window.selectedService || "Servicio General";
-
     const phone = document.getElementById('clientPhone').value;
     const allergies = document.getElementById('clientAllergies').value;
+    const photoInput = document.getElementById('designPhoto');
     const user = auth.currentUser;
 
     if (!user) {
@@ -304,14 +299,26 @@ async function saveAppointment() {
         return;
     }
 
+    let photoBase64 = null;
+    if (photoInput.files.length > 0) {
+        try {
+            photoBase64 = await readFileAsOptimizedBase64(photoInput.files[0]);
+        } catch (e) {
+            console.error("Error processing image:", e);
+            alert("Error al procesar la imagen.");
+            return;
+        }
+    }
+
     const appointmentData = {
         userId: user.uid,
-        userName: user.email, // Or fetch name from profile
+        userName: user.email,
         date: selectedDate,
         time: selectedTime,
         service: serviceName,
         phone: phone,
         allergies: allergies,
+        photoBase64: photoBase64, // New Field
         status: 'pending',
         createdAt: new Date().toISOString()
     };
@@ -319,11 +326,50 @@ async function saveAppointment() {
     try {
         await addDoc(collection(db, "appointments"), appointmentData);
         alert("¡Cita confirmada exitosamente!");
-        window.location.reload(); // Reset flow
+        window.location.reload();
     } catch (e) {
         console.error("Error saving appointment:", e);
         alert("Error al guardar: " + e.message);
     }
+}
+
+// Helper: Resize and Convert to Base64
+function readFileAsOptimizedBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 800;
+                const MAX_HEIGHT = 800;
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                // Compress to JPEG 0.7 quality
+                resolve(canvas.toDataURL('image/jpeg', 0.7));
+            };
+            img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
 }
 
 function changeMonth(delta) {
