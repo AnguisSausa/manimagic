@@ -24,6 +24,24 @@ export async function initClientCalendar() {
     document.getElementById('nextMonth').addEventListener('click', () => changeMonth(1));
     confirmBtn.addEventListener('click', saveAppointment);
 
+    // Phone Validation
+    const phoneInput = document.getElementById('clientPhone');
+    if (phoneInput) {
+        // 1. Restrict to numbers only
+        phoneInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        });
+
+        // 2. Validate length on blur (lose focus)
+        phoneInput.addEventListener('blur', (e) => {
+            const val = e.target.value;
+            if (val.length > 0 && val.length !== 10) {
+                if (window.showToast) showToast("El teléfono debe tener 10 dígitos", "error");
+                else alert("El teléfono debe tener 10 dígitos");
+            }
+        });
+    }
+
     // Listen for auth to load pending appointments
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -298,6 +316,13 @@ async function saveAppointment() {
 
     if (!phone) {
         alert("Por favor ingresa un teléfono.");
+        return;
+    }
+
+    // Validate Phone Length before saving
+    if (phone.length !== 10) {
+        if (window.showToast) showToast("El teléfono requiere 10 números exactos.", "error");
+        else alert("El teléfono requiere 10 números exactos.");
         return;
     }
 
