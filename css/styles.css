@@ -415,3 +415,54 @@ body.admin-body {
 .stock-alert-banner b {
     color: #e74c3c;
 }
+
+/* Sidebar Badge */
+.nav-item {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 0.5rem;
+}
+
+.nav-badge {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Floating Stock Alert for Calendar */
+.floating-stock-alert {
+    background: white;
+    padding: 1rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow-soft);
+    border-left: 5px solid #ff4757;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    animation: slideInRight 0.5s ease-out;
+    max-width: 300px;
+}
+
+.floating-stock-alert p {
+    font-size: 0.9rem;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.floating-stock-alert .btn-link {
+    color: var(--accent-color);
+    text-decoration: underline;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 0;
+}
