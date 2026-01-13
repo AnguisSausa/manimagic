@@ -415,3 +415,89 @@ body.admin-body {
 .stock-alert-banner b {
     color: #e74c3c;
 }
+
+/* Pending Appointments Widget */
+.pending-widget {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    padding: 1.2rem;
+    border-radius: 16px;
+    border: var(--glass-border);
+    box-shadow: var(--shadow-soft);
+    z-index: 1000;
+    width: 260px;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.pending-widget h3 {
+    font-size: 1.1rem;
+    font-family: var(--font-heading);
+    margin-bottom: 1rem;
+    color: var(--dark-bg);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding-bottom: 0.5rem;
+}
+
+.pending-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.8rem;
+    background: rgba(255,255,255,0.6);
+    border-radius: 12px;
+    margin-bottom: 0.8rem;
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+
+.pending-item:hover {
+    transform: translateY(-2px);
+    background: rgba(255,255,255,0.8);
+}
+
+.pending-date {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 0.95rem;
+}
+
+.pending-service {
+    font-size: 0.9rem;
+    color: var(--dark-bg);
+    font-weight: 500;
+}
+
+.pending-cancel-btn {
+    background: #ff7675;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    align-self: flex-start;
+    margin-top: 0.5rem;
+    transition: background 0.2s;
+}
+
+.pending-cancel-btn:hover {
+    background: #d63031;
+}
+
+/* Mobile Responsiveness for Widget */
+@media (max-width: 900px) {
+    .pending-widget {
+        position: relative; 
+        top: 0;
+        left: 0;
+        width: 100%;
+        margin-bottom: 1rem;
+        max-height: 300px;
+        z-index: 1;
+    }
+}

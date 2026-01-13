@@ -1,5 +1,6 @@
 import { db, auth } from "./firebase-config.js";
-import { doc, getDoc, collection, query, getDocs, where, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { doc, getDoc, collection, query, getDocs, where, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const calendarGrid = document.getElementById('calendarGrid');
 const currentMonthLabel = document.getElementById('currentMonthLabel');
@@ -22,6 +23,102 @@ export async function initClientCalendar() {
     document.getElementById('prevMonth').addEventListener('click', () => changeMonth(-1));
     document.getElementById('nextMonth').addEventListener('click', () => changeMonth(1));
     confirmBtn.addEventListener('click', saveAppointment);
+
+    // Listen for auth to load pending appointments
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            loadPendingAppointments(user.uid);
+        } else {
+            const widget = document.getElementById('pending-appointments-widget');
+            if(widget) widget.classList.add('hidden');
+        }
+    });
+}
+
+async function loadPendingAppointments(uid) {
+    const listContainer = document.getElementById('pending-list');
+    const widget = document.getElementById('pending-appointments-widget');
+    if (!listContainer || !widget) return;
+
+    try {
+        const q = query(
+            collection(db, "appointments"), 
+            where("userId", "==", uid),
+            where("status", "==", "pending") 
+        );
+        
+        const querySnapshot = await getDocs(q);
+        const appointments = [];
+        querySnapshot.forEach((doc) => {
+            appointments.push({ id: doc.id, ...doc.data() });
+        });
+        
+        // Sort by date ascending
+        appointments.sort((a, b) => {
+            const dateA = new Date(a.date + 'T' + a.time);
+            const dateB = new Date(b.date + 'T' + b.time);
+            return dateA - dateB;
+        });
+
+        if (appointments.length > 0) {
+            widget.classList.remove('hidden');
+            listContainer.innerHTML = '';
+            
+            appointments.forEach(appt => {
+                const item = document.createElement('div');
+                item.className = 'pending-item';
+                
+                // Format date nicely
+                const dateObj = new Date(appt.date + 'T12:00:00'); // Midday to avoid timezone shifts
+                const dateStr = dateObj.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
+
+                item.innerHTML = `
+                    <div class="pending-item-header">
+                         <span class="pending-date">${dateStr}</span>
+                         <span class="pending-service">${appt.time}</span>
+                    </div>
+                    <div class="pending-service">${appt.service}</div>
+                `;
+                
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'pending-cancel-btn';
+                cancelBtn.textContent = 'Cancelar';
+                cancelBtn.onclick = () => cancelAppointment(appt.id);
+                
+                item.appendChild(cancelBtn);
+                listContainer.appendChild(item);
+            });
+        } else {
+             widget.classList.add('hidden');
+        }
+    } catch(e) {
+        console.error("Error loading pending appointments:", e);
+    }
+}
+
+async function cancelAppointment(apptId) {
+    if(!confirm("¿Seguro que deseas cancelar esta cita?")) return;
+    
+    try {
+        await updateDoc(doc(db, "appointments", apptId), { 
+            status: 'canceled',
+            canceledAt: new Date().toISOString()
+        });
+        
+        showToast("Cita cancelada", "success");
+        
+        // Refresh
+        const user = auth.currentUser;
+        if(user) loadPendingAppointments(user.uid);
+        
+        // Refresh slots if on same day
+        if (selectedDate) generateTimeSlots(selectedDate);
+        
+    } catch(e) {
+        console.error("Error canceling:", e);
+        if(window.showToast) window.showToast("Error al cancelar", "error");
+        else alert("Error al cancelar");
+    }
 }
 
 async function loadAvailabilityData() {
