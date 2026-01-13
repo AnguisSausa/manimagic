@@ -51,63 +51,59 @@
             <h2 style="font-family: var(--font-heading); margin-bottom: 1.5rem;">Reserva tu Cita</h2>
             <p>1. Selecciona el servicio:</p>
             <!-- Service Selection Placeholder -->
-            <div
+            <!-- Service Selection -->
+            <div id="serviceSelection"
                 style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-                <div
-                    style="padding: 1rem; border: 2px solid var(--primary-color); background: var(--secondary-color); border-radius: 10px; text-align: center; cursor: pointer;">
+                <!-- onclick handlers added -->
+                <div class="service-card" onclick="selectService('Diseño', true)">
                     <h3>Diseño</h3>
-                    <p style="color: var(--accent-color); font-size: 0.8rem;">Mano alzada / 3D</p>
+                    <p class="service-desc">Mano alzada / 3D</p>
                 </div>
-                <div
-                    style="padding: 1rem; border: 1px solid #ccc; border-radius: 10px; text-align: center; cursor: pointer;">
+                <div class="service-card" onclick="selectService('Retoque', false)">
                     <h3>Retoque</h3>
-                    <p style="color: var(--accent-color); font-size: 0.8rem;">Mantenimiento</p>
+                    <p class="service-desc">Mantenimiento</p>
                 </div>
-                <div
-                    style="padding: 1rem; border: 1px solid #ccc; border-radius: 10px; text-align: center; cursor: pointer;">
+                <div class="service-card" onclick="selectService('Esmaltado', true)">
                     <h3>Esmaltado</h3>
-                    <p style="color: var(--accent-color); font-size: 0.8rem;">Gel Semipermanente</p>
+                    <p class="service-desc">Gel Semipermanente</p>
                 </div>
-                <div
-                    style="padding: 1rem; border: 1px solid #ccc; border-radius: 10px; text-align: center; cursor: pointer;">
+                <div class="service-card" onclick="selectService('Retiro', false)">
                     <h3>Retiro</h3>
-                    <p style="color: var(--accent-color); font-size: 0.8rem;">Retiro de material</p>
+                    <p class="service-desc">Retiro de material</p>
                 </div>
+            </div>
+
+            <!-- Additional Client Info -->
+            <div class="form-group">
+                <label class="form-label">Teléfono / WhatsApp:</label>
+                <input type="tel" id="clientPhone" class="form-input" placeholder="55 1234 5678" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Alergias o Condiciones Especiales:</label>
+                <textarea id="clientAllergies" class="form-input" rows="2"
+                    placeholder="Ej. Piel sensible, alergia a acrílico..."></textarea>
+            </div>
+
+            <!-- Conditional Photo Upload -->
+            <div id="photoUploadSection" class="form-group hidden"
+                style="background: var(--secondary-color); padding: 1rem; border-radius: 10px;">
+                <label class="form-label" style="color: var(--dark-bg); font-weight: bold;">📸 Referencia del
+                    Diseño:</label>
+                <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Sube una foto de lo que te gustaría hacerte.</p>
+                <input type="file" id="designPhoto" class="form-input" accept="image/*">
             </div>
 
             <p>2. Selecciona una fecha:</p>
             <div class="calendar-container" style="border: 1px solid #eee; box-shadow: none; padding: 1rem;">
                 <div class="calendar-header">
-                    <button class="calendar-nav-btn">&lt;</button>
-                    <h2 class="calendar-title" style="font-size: 1.2rem;">Enero 2026</h2>
-                    <button class="calendar-nav-btn">&gt;</button>
+                    <button class="calendar-nav-btn" id="prevMonth">&lt;</button>
+                    <h2 class="calendar-title" id="currentMonthLabel" style="font-size: 1.2rem;">Cargando...</h2>
+                    <button class="calendar-nav-btn" id="nextMonth">&gt;</button>
                 </div>
-                <!-- Mini Calendar Grid -->
-                <div class="calendar-grid">
-                    <div class="calendar-day-name">D</div>
-                    <div class="calendar-day-name">L</div>
-                    <div class="calendar-day-name">M</div>
-                    <div class="calendar-day-name">M</div>
-                    <div class="calendar-day-name">J</div>
-                    <div class="calendar-day-name">V</div>
-                    <div class="calendar-day-name">S</div>
-
-                    <div class="calendar-date empty"></div>
-                    <div class="calendar-date empty"></div>
-                    <div class="calendar-date empty"></div>
-                    <div class="calendar-date">1</div>
-                    <div class="calendar-date">2</div>
-                    <div class="calendar-date">3</div>
-                    <div class="calendar-date">4</div>
-
-                    <div class="calendar-date">5</div>
-                    <div class="calendar-date">6</div>
-                    <div class="calendar-date">7</div>
-                    <div class="calendar-date">8</div>
-                    <div class="calendar-date">9</div>
-                    <div class="calendar-date today active">10</div>
-                    <div class="calendar-date">11</div>
-                    <!-- Truncated for visual brevity in code, user gets idea -->
+                <!-- Dynamic Calendar Grid -->
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- JS will inject days here -->
                 </div>
             </div>
 
@@ -116,6 +112,38 @@
         </div>
     </div>
     <script type="module" src="../js/auth.js"></script>
+    <script type="module">
+        import { initClientCalendar } from '../js/calendar-client.js';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initClientCalendar();
+        });
+    </script>
+    <script>
+        let selectedService = null;
+
+        function selectService(serviceName, requiresPhoto) {
+            selectedService = serviceName;
+
+            // Visual Highlight
+            const cards = document.querySelectorAll('.service-card');
+            cards.forEach(card => {
+                if (card.querySelector('h3').textContent === serviceName) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+
+            // Toggle Photo Upload
+            const photoSection = document.getElementById('photoUploadSection');
+            if (requiresPhoto) {
+                photoSection.classList.remove('hidden');
+            } else {
+                photoSection.classList.add('hidden');
+            }
+        }
+    </script>
 </body>
 
 </html>
