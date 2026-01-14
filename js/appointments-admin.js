@@ -70,6 +70,9 @@ async function loadAppointments() {
                         <button class="btn-complete" data-id="${appt.id}" title="Completar" style="
                             background: none; border: none; cursor: pointer; font-size:1.2rem;
                         ">✅</button>
+                        <button class="btn-cancel" data-id="${appt.id}" title="Cancelar" style="
+                            background: none; border: none; cursor: pointer; font-size:1.2rem;
+                        ">❌</button>
                     </div>
                 </td>
             `;
@@ -83,14 +86,19 @@ async function loadAppointments() {
             });
         });
 
+        document.querySelectorAll('.btn-cancel').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                cancelAppointmentAdmin(btn.dataset.id);
+            });
+        });
+
         // Add Listeners for Photos
         document.querySelectorAll('.view-photo-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const apptId = btn.dataset.photo;
                 const appt = appts.find(a => a.id === apptId);
                 if (appt && appt.photoBase64) {
-                    const w = window.open("");
-                    w.document.write(`<img src="${appt.photoBase64}" style="max-width:100%">`);
+                    openPhotoModal(appt.photoBase64);
                 }
             });
         });
@@ -129,11 +137,56 @@ async function confirmCompletion() {
             completedAt: new Date().toISOString()
         });
 
-        alert("¡Cita completada y cobrada!");
+        if (window.showToast) window.showToast("¡Cita completada y cobrada!", "success");
+        else alert("¡Cita completada y cobrada!");
+
         closeCompleteModal();
         loadAppointments(); // Refresh table
     } catch (error) {
         console.error("Error updating appointment:", error);
-        alert("Error: " + error.message);
+        if (window.showToast) window.showToast("Error: " + error.message, "error");
+        else alert("Error: " + error.message);
+    }
+}
+
+function openPhotoModal(src) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    if (modal && modalImg) {
+        modalImg.src = src;
+        modal.style.display = 'flex';
+    }
+}
+
+// Global listener for closing the image modal
+document.addEventListener('DOMContentLoaded', () => {
+    const imageModal = document.getElementById('imageModal');
+    const closeBtn = document.getElementById('closeImageModal');
+    if (closeBtn && imageModal) {
+        closeBtn.onclick = () => imageModal.style.display = 'none';
+        imageModal.onclick = (e) => {
+            if (e.target === imageModal) imageModal.style.display = 'none';
+        };
+    }
+});
+
+async function cancelAppointmentAdmin(id) {
+    if (!confirm("¿Seguro que deseas cancelar esta cita? Esta acción liberará el horario.")) return;
+
+    try {
+        const docRef = doc(db, "appointments", id);
+        await updateDoc(docRef, {
+            status: 'canceled',
+            canceledAt: new Date().toISOString()
+        });
+
+        if (window.showToast) window.showToast("Cita cancelada y horario liberado.", "success");
+        else alert("Cita cancelada y horario liberado.");
+
+        loadAppointments(); // Refresh table
+    } catch (error) {
+        console.error("Error canceling appointment:", error);
+        if (window.showToast) window.showToast("Error: " + error.message, "error");
+        else alert("Error: " + error.message);
     }
 }

@@ -1,5 +1,5 @@
 import { db, auth } from "./firebase-config.js";
-import { doc, getDoc, collection, query, getDocs, where, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { doc, getDoc, collection, query, getDocs, where, addDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const calendarGrid = document.getElementById('calendarGrid');
@@ -125,7 +125,8 @@ async function cancelAppointment(apptId) {
             canceledAt: new Date().toISOString()
         });
 
-        showToast("Cita cancelada", "success");
+        if (window.showToast) window.showToast("Cita cancelada", "success");
+        else alert("Cita cancelada");
 
         // Refresh
         const user = auth.currentUser;
@@ -250,7 +251,10 @@ async function generateTimeSlots(dateStr) {
 
     const bookedTimes = [];
     querySnapshot.forEach(doc => {
-        bookedTimes.push(doc.data().time); // Assuming stored as "09:00"
+        const data = doc.data();
+        if (data.status !== 'canceled') {
+            bookedTimes.push(data.time); // Assuming stored as "09:00"
+        }
     });
 
     // 2. Generate Slots (Every 2 Hours)
@@ -310,12 +314,14 @@ async function saveAppointment() {
     const user = auth.currentUser;
 
     if (!user) {
-        alert("Debes iniciar sesión para agendar.");
+        if (window.showToast) showToast("Debes iniciar sesión para agendar.", "error");
+        else alert("Debes iniciar sesión para agendar.");
         return;
     }
 
     if (!phone) {
-        alert("Por favor ingresa un teléfono.");
+        if (window.showToast) showToast("Por favor ingresa un teléfono.", "error");
+        else alert("Por favor ingresa un teléfono.");
         return;
     }
 
@@ -339,7 +345,8 @@ async function saveAppointment() {
             photoBase64 = await readFileAsOptimizedBase64(photoInput.files[0]);
         } catch (e) {
             console.error("Error processing image:", e);
-            alert("Error al procesar la imagen.");
+            if (window.showToast) showToast("Error al procesar la imagen.", "error");
+            else alert("Error al procesar la imagen.");
             return;
         }
     }
@@ -359,11 +366,22 @@ async function saveAppointment() {
 
     try {
         await addDoc(collection(db, "appointments"), appointmentData);
-        alert("¡Cita confirmada exitosamente!");
-        window.location.reload();
+
+        // Update user profile with phone if not present
+        if (user.uid) {
+            await setDoc(doc(db, "users", user.uid), { phone: phone }, { merge: true });
+        }
+
+        if (window.showToast) showToast("¡Cita confirmada exitosamente!", "success");
+        else alert("¡Cita confirmada exitosamente!");
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
     } catch (e) {
         console.error("Error saving appointment:", e);
-        alert("Error al guardar: " + e.message);
+        if (window.showToast) showToast("Error al guardar: " + e.message, "error");
+        else alert("Error al guardar: " + e.message);
     }
 }
 

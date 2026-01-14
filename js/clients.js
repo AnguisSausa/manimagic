@@ -22,19 +22,28 @@ if (logoutBtn) {
  */
 async function fetchClients() {
     try {
-        // Consultar usuarios con rol "client"
-        // Quitamos orderBy para evitar la necesidad de crear un índice compuesto en Firebase
-        const q = query(
+        // 1. Obtener todos los usuarios con rol "client"
+        const qUsers = query(
             collection(db, "users"),
             where("role", "==", "client")
         );
+        const usersSnapshot = await getDocs(qUsers);
 
-        const querySnapshot = await getDocs(q);
+        // 2. Obtener todas las citas para extraer números de teléfono si faltan en el perfil
+        // Esto ayuda a mostrar el teléfono de clientes que ya han agendado antes
+        const apptsSnapshot = await getDocs(collection(db, "appointments"));
+        const phonesByUid = {};
+        apptsSnapshot.forEach(doc => {
+            const data = doc.data();
+            if (data.userId && data.phone) {
+                phonesByUid[data.userId] = data.phone;
+            }
+        });
 
         // Limpiar contenedor
         clientListContainer.innerHTML = "";
 
-        if (querySnapshot.empty) {
+        if (usersSnapshot.empty) {
             clientListContainer.innerHTML = `
                 <div style="text-align: center; padding: 2rem; color: #666;">
                     <p>No hay clientes registrados todavía.</p>
@@ -43,12 +52,17 @@ async function fetchClients() {
             return;
         }
 
-        // Convertir a array y ordenar alfabéticamente en el cliente
         const clients = [];
-        querySnapshot.forEach(doc => {
-            clients.push({ id: doc.id, ...doc.data() });
+        usersSnapshot.forEach(doc => {
+            const userData = doc.data();
+            // Si el teléfono no está en el perfil, buscarlo en las citas
+            if (!userData.phone && phonesByUid[doc.id]) {
+                userData.phone = phonesByUid[doc.id];
+            }
+            clients.push({ id: doc.id, ...userData });
         });
 
+        // Ordenar alfabéticamente
         clients.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 
         // Renderizar cada cliente
@@ -81,7 +95,8 @@ function renderClientCard(client) {
     card.innerHTML = `
         <div class="client-info">
             <h3>${name}</h3>
-            <p>${email} | ${phone}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Tel:</strong> ${phone}</p>
         </div>
         <div class="client-stats">
             <span class="badge">Nuevo Cliente</span>

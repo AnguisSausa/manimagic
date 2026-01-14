@@ -14,7 +14,14 @@ function showToast(message, type = "success") {
 
     const toast = document.createElement("div");
     toast.className = `toast ${type}`;
+
+    let icon = "🔔";
+    if (type === "success") icon = "✅";
+    if (type === "error") icon = "❌";
+    if (type === "warning") icon = "⚠️";
+
     toast.innerHTML = `
+        <div class="toast-icon">${icon}</div>
         <div class="toast-message">${message}</div>
     `;
 
